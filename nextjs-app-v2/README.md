@@ -1,12 +1,9 @@
-# CPEN 208 — Student Management System (Redesign)
+# CPEN 208 — Student Management System 
 
 A full UI and architecture overhaul of the Project 1 Next.js app: client
 components fetching from Next.js API routes (instead of Server Actions),
 JWT stored in `localStorage`, and a new design system (blue/purple
 gradient palette, Inter font, card-based layout with a dark sidebar).
-
-Same `cpen_db` PostgreSQL database as the rest of the project — no schema
-changes.
 
 ## Architecture
 
@@ -19,20 +16,7 @@ app/api/*/route.ts   (Next.js Route Handlers — server-side, talk to Postgres)
    ▼
 cpen_db (PostgreSQL)
 ```
-
-**No component ever imports `pg` or queries the database directly.**
-Every read/write goes through an API route.
-
-### Important note on "protected routes via middleware"
-
-The original spec asked for protected routes via middleware with a
-JWT in `localStorage`. These two requirements conflict: Next.js
-`middleware.ts` runs on the edge/server **before** any browser
-JavaScript executes, so it has **no access to `localStorage`**, which is
-a browser-only API. There is no way to make literal Next.js middleware
-read a `localStorage` token.
-
-What's implemented instead: `app/(app)/layout.tsx` is a client
+ `app/(app)/layout.tsx` is a client
 component that wraps every protected page (dashboard, students, fees,
 courses, profile). On mount it checks `AuthContext` for a valid user; if
 none is found, it redirects to `/login`. This is the standard pattern
